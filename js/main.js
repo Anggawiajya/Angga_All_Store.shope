@@ -59,15 +59,3 @@ if (navigator.geolocation) {
 }
 
 //swipe slide
-
-var swiper = new Swiper('.swiper-container', {
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        loop: true, /* Menjadikan slider berputar terus */
-        autoplay: {
-            delay: 2500,
-            disableOnInteraction: false,
-        },
-    });
