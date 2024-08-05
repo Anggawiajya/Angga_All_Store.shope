@@ -30,32 +30,39 @@ navLink.forEach(n => n.addEventListener('click', linkAction))
 ;
 
 function generateWaLink(productName, phoneNumber, address, price, locationLink) {
-  let baseURL = "https://wa.me/6281261233552";
-  let message = `
-  *CREATE ORDER YOUR*
+    let baseURL = "https://wa.me/6281261233552";
+    let message = `
   Nama Barang: ${productName}
-  Nomor HP: ${phoneNumber}
+  Nama Anda: ${phoneNumber}
   Alamat: ${address}
   Harga: ${price}
-  Lokasi: ${locationLink}
-  
-  *TUNGGU BALASAN DARI KAMI*
-  `;
-  let finalURL = `${baseURL}?text=${encodeURIComponent(message)}`;
-  document.getElementById('pesanWa').href = finalURL;
+  Lokasi: ${locationLink}`;
+    let finalURL = `${baseURL}?text=${encodeURIComponent(message)}`;
+    return finalURL;
 }
 
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(function(position) {
-    let latitude = position.coords.latitude;
-    let longitude = position.coords.longitude;
-    let googleMapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+document.getElementById('pesanWa').addEventListener('click', function(event) {
+    event.preventDefault(); // Mencegah link untuk membuka halaman baru secara langsung
 
-    // Contoh penggunaan fungsi ini dengan produk dan lokasi pengguna
-    generateWaLink('Cireng Ayam', '', '', 'Rp10.000', googleMapsLink);
-  });
-} else {
-  alert("Geolocation is not supported by this browser.");
-}
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+            let googleMapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-//swipe slide
+            // Buat link WhatsApp dengan informasi produk dan lokasi pengguna
+            let whatsappLink = generateWaLink('cireng', 'nama anda', 'alamat anda', 'Rp100.000', googleMapsLink);
+
+            // Arahkan pengguna ke WhatsApp setelah link dihasilkan
+            window.location.href = whatsappLink;
+        }, function(error) {
+            if (error.code === error.PERMISSION_DENIED) {
+                alert('Akses lokasi ditolak. Silakan aktifkan izin lokasi.');
+            } else {
+                alert('Terjadi kesalahan dalam mendapatkan lokasi.');
+            }
+        });
+    } else {
+        alert("Geolocation tidak didukung oleh browser ini.");
+    }
+});
